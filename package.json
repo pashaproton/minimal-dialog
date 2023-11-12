@@ -1,0 +1,30 @@
+{
+  "name": "minimal-dialog",
+  "version": "0.1.0",
+  "description": "Minimal JavaScript dialog with no dependencies",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "rm -rf dist && mkdir dist",
+    "build:js": "bunx esbuild src/index.js --bundle --minify --sourcemap --outfile=dist/js/minimal-dialog.min.js",
+    "build:css": "bunx esbuild src/style.css --bundle --minify --outfile=dist/css/minimal-dialog.min.css",
+    "build": "npm run build:js && npm run build:css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pashaproton/minimal-dialog.git"
+  },
+  "keywords": [
+    "dialog",
+    "minimal",
+    "modal",
+    "javascript",
+    "library"
+  ],
+  "author": "Pavlo Ivanichenko <pasha.proton@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pashaproton/minimal-dialog/issues"
+  },
+  "homepage": "https://github.com/pashaproton/minimal-dialog"
+}
