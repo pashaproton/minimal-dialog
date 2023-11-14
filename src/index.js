@@ -1,3 +1,5 @@
+const DEFAULT_TRIGGER_SELECTOR = "data-dialog";
+
 const timeoutIds = {};
 
 const isOutsideDialog = (dialogElement, e) => {
@@ -45,6 +47,7 @@ const createCloseButton = dialogElement => {
 };
 
 const handleTriggerClick = e => {
+  console.log("handleTriggerClick");
   const dialogElement = document.getElementById(e.target.dataset.dialog);
   dialogElement.showModal();
   dialogElement.classList.add("visible");
@@ -52,16 +55,39 @@ const handleTriggerClick = e => {
 
 const bindTriggerEvents = trigger => trigger.addEventListener("click", handleTriggerClick);
 
-const getDialogTriggers = () => document.querySelectorAll("[data-dialog]");
+const getDialogTriggers = () => document.querySelectorAll(`[${DEFAULT_TRIGGER_SELECTOR}]`);
 
-document.addEventListener("DOMContentLoaded", () => {
-  const dialogsTriggers = getDialogTriggers();
-  const dialogsElements = document.querySelectorAll("dialog");
-  dialogsTriggers.forEach(bindTriggerEvents);
-  dialogsElements.forEach(dialogElement => {
+const processTrigger = trigger => {
+  bindTriggerEvents(trigger);
+  const dialogElement = document.getElementById(trigger.dataset.dialog);
+  if (dialogElement) {
     createCloseButton(dialogElement);
     bindDialogEvents(dialogElement);
+  }
+};
+
+const observer = new MutationObserver(mutations => {
+  for (const mutation of mutations) {
+    if (mutation.type === 'childList') {
+      mutation.addedNodes.forEach(node => {
+        if (node.hasAttribute(DEFAULT_TRIGGER_SELECTOR)) {
+          bindTriggerEvents(node);
+          processTrigger(node);
+        }
+
+        node.querySelectorAll(`[${DEFAULT_TRIGGER_SELECTOR}]`).forEach(processTrigger);
+      });
+    }
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
   });
+
+  getDialogTriggers().forEach(processTrigger);
 });
 
 document.addEventListener("keydown", e => {
