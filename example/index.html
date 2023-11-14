@@ -49,6 +49,23 @@
     </dialog>
   </main>
   <script src="../dist/js/minimal-dialog.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      window.setTimeout(() => {
+        const main = document.querySelector("main");
+
+        const button = document.createElement("button");
+        button.setAttribute("data-dialog", "async-dialog");
+        button.textContent = "Open async dialog";
+        main.appendChild(button);
+
+        const dialog = document.createElement("dialog");
+        dialog.setAttribute("id", "async-dialog");
+        dialog.innerHTML = "<p>Async modal content</p>";
+        main.appendChild(dialog);
+      }, 1000);
+    });
+  </script>
 </body>
 
 </html>
